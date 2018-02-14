@@ -57,14 +57,19 @@ export default class Units extends React.Component {
     this.id && clearInterval(this.id)
     if (!nextProps.paused) {
         this.id = setInterval(this.updateSentence, nextProps.speed)
+        if (nextProps.section !== this.props.section) {
+          this.setState({
+            index: 0
+          })
+        }
     }
   }
 
   render () {
-    const classNames = ["Units"]
+    const { sentence, color } = this.state
     return (
-      <UnitsComponent color={this.state.color}>
-        <span className={this.state.color}>{this.state.sentence.split('+').map((question, key) => <div key={key}>{question}</div>)}</span>
+      <UnitsComponent color={color}>
+        <span>{sentence.split('+').map((question, key) => <div key={key}>{question}</div>)}</span>
         {/* <div>{this.state.previous}</div> */}
       </UnitsComponent>
     )

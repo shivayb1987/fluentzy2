@@ -26,6 +26,9 @@ const AppArea = styled.div`
   font-weight: bold;
   flex: 2;
 `
+const Control = styled.div`
+  cursor: pointer;
+`
 export default class App extends React.Component {
   constructor () {
     super()
@@ -51,7 +54,7 @@ export default class App extends React.Component {
         this.decrease()
       }
     })
-
+    this.props.onClick(sections[0].replace(/ /g, ''))
   }
 
   increase = () => {
@@ -78,20 +81,28 @@ export default class App extends React.Component {
     })
   }
 
+  onSectionClick = (section) => {
+    this.props.onClick(section.replace(/ /g, ''))
+    this.setState({
+      section
+    })
+  }
+
   render () {
-    const { speed, paused, shuffled } = this.state
+    const { speed, paused, shuffled, section } = this.state
     const { onClick } = this.props
     return (
       <AppComponent>
         <Section>
           <div>Click a topic to begin!</div>
-          {sections.map((section, index) => <Header key={index} onClick={() => onClick(section.replace(/ /g, ''))}>{section}</Header>)}
+          {sections.map((section, index) => <Header key={index} onClick={() => this.onSectionClick(section)}>{section}</Header>)}
         </Section>
         <AppArea>
             <div className='plus' onClick={this.shuffle}>&#128256;</div>
             <span className='speed'>Speed: {this.state.speed/1000}s </span>
-            <div className='plus' onClick={this.decrease}>+</div><div className='minus' onClick={this.increase}>-</div>
-          <Units value={this.props.value} speed={speed} paused={paused} shuffled={shuffled}/>
+            <Control className='plus' onClick={this.decrease}>+</Control>
+            <Control className='minus' onClick={this.increase}>-</Control>
+          <Units value={this.props.value} section={section} speed={speed} paused={paused} shuffled={shuffled}/>
         </AppArea>
       </AppComponent>
     )
